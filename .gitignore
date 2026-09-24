@@ -1,0 +1,4 @@
+jai/
+*.exe
+*.pdb
+src/.build/
