@@ -1,4 +1,4 @@
-jai/
 *.exe
 *.pdb
-src/.build/
+.build/
+jai/
