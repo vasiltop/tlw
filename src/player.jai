@@ -19,6 +19,7 @@ init :: (using p: *Player) {
 
 draw :: (using p: *Player) {
 	Simp.set_shader_for_images(*body_texture);
+	Simp.immediate_set_2d_projection(WORLD_WIDTH, WORLD_HEIGHT);
 
 	Simp.immediate_begin();
 	defer Simp.immediate_flush();
@@ -26,6 +27,5 @@ draw :: (using p: *Player) {
 	w := cast(float)body_texture.width;
 	h := cast(float)body_texture.height;
 
-	Simp.immediate_quad(.{x, 0}, .{w + x, 0}, .{w + x, h}, .{x, h});
-	// @Incomplete: Render the player properly even through resizes and position changes
+	Simp.immediate_quad(.{x, 0}, .{x + w, 0}, .{x + w, h}, .{x, h});
 }
