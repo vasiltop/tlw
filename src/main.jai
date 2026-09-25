@@ -49,6 +49,8 @@ main :: () {
 	init();
 
 	quit := false;
+	time := seconds_since_init();
+
 	while !quit {
 		Input.update_window_events();
 
@@ -63,18 +65,14 @@ main :: () {
 		}
 
 		for Input.events_this_frame {
-			if it.type == .QUIT then quit = true;
-
-			if it.type == {
-				case .KEYBOARD;
-				if it.key_pressed && it.key_code == .ESCAPE {
-					quit = true;
-				}
-			}
+			if handle_event(it) quit = true;
 		}
 
-		draw();
-		sleep_milliseconds(10);
+		new_time := seconds_since_init();
+		dt := new_time - time;
+		time = new_time;
+
+		frame(dt);
 		reset_temporary_storage();
 	}
 }
@@ -83,7 +81,22 @@ init :: () {
 	init(*player);
 }
 
-draw :: () {
+handle_event :: (event: Input.Event) -> bool {
+	if event.type == .QUIT then return true;
+
+	if event.type == {
+		case .KEYBOARD;
+		if event.key_pressed && event.key_code == .ESCAPE {
+			return true;
+		}
+	}
+
+	return false;
+}
+
+frame :: (dt: float64) {
+	frame(*player, dt);
+
 	Simp.clear_render_target(0, 0, 0, 1);
 	GL.glViewport(viewport_x, viewport_y, cast(u32)viewport_w, cast(u32)viewport_h);
 

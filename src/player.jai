@@ -1,3 +1,6 @@
+A :: cast(Input.Key_Code) #char "A";
+D :: cast(Input.Key_Code) #char "D";
+
 Player :: struct {
 	using pos: Vector2;
 	body_texture: Simp.Texture;
@@ -17,6 +20,13 @@ init :: (using p: *Player) {
 	load_texture(*gun_texture, "textures/gun.png");
 }
 
+frame :: (using p: *Player, dt: float64) {
+	dx := cast(int)key_down(D) - cast(int)key_down(A);
+	SPEED :: 80;
+
+	x += dx * SPEED * cast(float)dt;
+}
+
 draw :: (using p: *Player) {
 	Simp.set_shader_for_images(*body_texture);
 	Simp.immediate_set_2d_projection(WORLD_WIDTH, WORLD_HEIGHT);
@@ -28,4 +38,8 @@ draw :: (using p: *Player) {
 	h := cast(float)body_texture.height;
 
 	Simp.immediate_quad(.{x, 0}, .{x + w, 0}, .{x + w, h}, .{x, h});
+}
+
+key_down :: (key: Input.Key_Code) -> bool {
+	return (Input.input_button_states[key] & .DOWN) != 0;
 }
